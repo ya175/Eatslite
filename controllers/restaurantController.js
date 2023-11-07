@@ -1,7 +1,6 @@
 const Restaurant = require("./../models/restaurantModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("./../utils/AppError");
-const { query } = require("express");
 
 const sendRes = (res, statusCode, status, data) => {
   res.status(statusCode).json({
@@ -17,9 +16,10 @@ exports.createRestaurant = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllRestaurants = catchAsync(async (req, res, next) => {
-  //-------FILTER--------
-
   //build the query
+
+  //-------FILTER--------
+  console.log("💥💥💥");
   const querObj = { ...req.query };
   console.log(querObj);
   const excludedFields = ["page", "limit", "sort"];
@@ -79,7 +79,13 @@ exports.updateRestaurant = catchAsync(async (req, res, next) => {
 });
 
 exports.getOneById = catchAsync(async (req, res, next) => {
-  const restaurant = await Restaurant.findById(req.params.restaurantId);
+  Restaurant.findById;
+  const restaurant = await Restaurant.findById(
+    req.params.restaurantId
+  ).populate("menu");
+  console.log(restaurant);
+  console.log(req.params.restaurantId);
+  // .select('-_id');
   if (!restaurant) return next(new AppError("no restaurant found", 404));
 
   sendRes(res, 200, "success", restaurant);

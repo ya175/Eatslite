@@ -1,28 +1,44 @@
 const mongoose = require("mongoose");
-const Menue = require("./menueModel");
+const Menu = require("./menuModel");
 
-const restaurantSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const restaurantSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    descreption: { type: String },
+    //   location: {type:String},
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: { type: Date },
+    image: {
+      type: String,
+    },
+    //child Refernecing  => insted use virtual poplulation
+    // menues: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: Menue,
+    //   },
+    // ],
   },
-  descreption: { type: String },
-  //   location: {type:String},
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: { type: Date },
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 // restaurantSchema.pre("save", () => {
 //   if (!this.isModified)this.updtaed = Date.now();
 // });
 
-restaurantSchema.virtual("menue", {
-  ref: "Menue",
-  localField: "_id",
+restaurantSchema.virtual("menu", {
+  ref: "Menu",
   foreignField: "restaurant",
+  localField: "_id",
 });
 
 const Restaurant = mongoose.model("Restaurant", restaurantSchema);

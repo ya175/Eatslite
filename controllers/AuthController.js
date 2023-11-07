@@ -36,13 +36,17 @@ const createSendToken = (res, statusCode, user) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const newUser = await User.create({
-    username: req.body.username,
+    fName: req.body.fName,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     role: req.body.role,
   });
+
+  console.log("signed-up");
+
   createSendToken(res, 200, newUser);
 });
 exports.login = catchAsync(async (req, res, next) => {
@@ -124,7 +128,6 @@ exports.restrictedTo = (...allowedRoles) => {
   return (req, res, next) => {
     if (!allowedRoles.includes(req.user.role))
       return next(new AppError("you are not allowed to do this action", 401));
-    console.log("allowed");
     next();
   };
 };
